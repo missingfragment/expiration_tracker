@@ -70,11 +70,19 @@ class SettingsWindow(Toplevel):
 
     def apply_settings(self):
         self.parent.config['auto_save'] = self.settings['auto_save'].get()
-        messagebox.showinfo(self, "Settings applied.")
+        messagebox.showinfo(
+            parent=self,
+            title="Notice",
+            message="Settings applied."
+        )
 
     def cancel(self):
         confirm = messagebox.askokcancel(
-            self,
+            parent=self,
             title="Confirmation",
             message="Closing this window and discarding changes.  Is this ok?"
         )
+
+        if not confirm:
+            return
+        self.destroy()

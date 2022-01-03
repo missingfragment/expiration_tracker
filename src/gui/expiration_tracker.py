@@ -203,9 +203,6 @@ class ExpirationTracker:
 
             new_row.append(remaining_label)
 
-            """ delete_lambda = (lambda: self.delete_record(
-                record.get_id())) """
-
             delete_button = ttk.Button(
                 self.mainframe, text="Delete",
                 command=partial(self.delete_record, record.get_id())
@@ -249,12 +246,16 @@ class ExpirationTracker:
         if age_limit:
             date_cutoff = date.today() - timedelta(days=age_limit)
             print(date_cutoff)
-            matches = [record for record in self.records.dict.values()
-                       if record.is_expired() and record.expiration_date <= date_cutoff]
+            matches = [
+                record for record in self.records.dict.values()
+                if record.is_expired() and record.expiration_date <= date_cutoff
+            ]
         else:
-            matches = [record for record
-                       in self.records.dict.values()
-                       if record.is_expired()]
+            matches = [
+                record for record
+                in self.records.dict.values()
+                if record.is_expired()
+            ]
 
         if not matches or len(matches) == 0:
             messagebox.showinfo(
