@@ -91,7 +91,10 @@ def delete_record(fm: FileManager, records: RecordSet) -> None:
         break
 
 
-def search_records(fm, records, prompt="Enter the name of the record you're looking for.") -> list:
+def search_records(
+    records: RecordSet,
+    prompt="Enter the name of the record you're looking for."
+) -> list:
     while True:
         name = input(
             f"{prompt}  Enter \".\" to stop.")

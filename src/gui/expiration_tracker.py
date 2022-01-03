@@ -7,6 +7,7 @@ from src.file_manager import FileManager, CsvFileStatus
 from src.record_set import RecordSet
 from src.gui.new_record_prompt import NewRecordPrompt
 from src.gui.purge_prompt import PurgePrompt
+from src.gui.settings_window import SettingsWindow
 
 from datetime import date, timedelta
 
@@ -17,6 +18,8 @@ class ExpirationTracker:
     def __init__(self, root: Toplevel) -> None:
         root.title("Expiration Tracker")
         root.geometry("600x500")
+
+        self.root = root
 
         self.csv_file = Path("data.csv")
         self.file_manager = FileManager(self.csv_file)
@@ -36,9 +39,15 @@ class ExpirationTracker:
         self.button_panel = ttk.Frame(root, padding="10")
         self.button_panel.grid(column=0, row=0, sticky=(N, S, E, W))
 
+        self.init_config()
         self.init_layout()
         self.init_menubar(root)
         self.update_layout()
+
+    def init_config(self) -> None:
+        self.config = {
+            "auto_save": False
+        }
 
     def init_menubar(self, root) -> None:
         menubar = Menu(root)
@@ -48,17 +57,42 @@ class ExpirationTracker:
         menubar.add_cascade(menu=menu_file, label="File")
         menubar.add_cascade(menu=menu_edit, label="Edit")
 
-        menu_file.add_command(label="New Record Set",
-                              command=self.new_record_set)
-        menu_file.add_command(label="Import Record Set...",
-                              command=self.import_record_set)
-        menu_file.add_command(label="Export Record Set...",
-                              command=self.export_record_set)
+        menu_file.add_command(
+            label="New Record Set",
+            command=self.new_record_set
+        )
+        menu_file.add_command(
+            label="Import Record Set...",
+            command=self.import_record_set
+        )
+        menu_file.add_command(
+            label="Export Record Set...",
+            command=self.export_record_set
+        )
 
-        menu_edit.add_command(label="Add Record...",
-                              command=self.add_button.invoke)
-        menu_edit.add_command(label="Purge Records...",
-                              command=self.purge_button.invoke)
+        menu_file.add_separator()
+
+        menu_file.add_command(
+            label="Settings",
+            command=(lambda: SettingsWindow(self))
+
+        )
+        menu_file.add_separator()
+
+        menu_file.add_command(
+            label="Exit",
+            command=(lambda: self.root.destroy())
+        )
+
+        menu_edit.add_command(
+            label="Add Record...",
+            command=self.add_button.invoke
+        )
+
+        menu_edit.add_command(
+            label="Purge Records...",
+            command=self.purge_button.invoke
+        )
 
     def new_record_set(self) -> None:
         file_types = [("CSV Files", ".csv")]
